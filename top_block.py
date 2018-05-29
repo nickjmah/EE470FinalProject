@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Mon May 28 18:22:52 2018
+# Generated: Mon May 28 19:50:35 2018
 ##################################################
 
 if __name__ == '__main__':
@@ -24,6 +24,7 @@ from PyQt4 import Qt
 from asc_2_sym import asc_2_sym  # grc-generated hier_block
 from gnuradio import blocks
 from gnuradio import eng_notation
+from gnuradio import filter
 from gnuradio import gr
 from gnuradio import qtgui
 from gnuradio.eng_option import eng_option
@@ -73,7 +74,55 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
+        self.qtgui_time_sink_x_1 = qtgui.time_sink_f(
+        	1024, #size
+        	samp_rate, #samp_rate
+        	"", #name
+        	1 #number of inputs
+        )
+        self.qtgui_time_sink_x_1.set_update_time(0.10)
+        self.qtgui_time_sink_x_1.set_y_axis(-1, 1)
+
+        self.qtgui_time_sink_x_1.set_y_label('Amplitude', "")
+
+        self.qtgui_time_sink_x_1.enable_tags(-1, True)
+        self.qtgui_time_sink_x_1.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+        self.qtgui_time_sink_x_1.enable_autoscale(True)
+        self.qtgui_time_sink_x_1.enable_grid(False)
+        self.qtgui_time_sink_x_1.enable_axis_labels(True)
+        self.qtgui_time_sink_x_1.enable_control_panel(False)
+        self.qtgui_time_sink_x_1.enable_stem_plot(False)
+
+        if not True:
+          self.qtgui_time_sink_x_1.disable_legend()
+
+        labels = ['', '', '', '', '',
+                  '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+                  1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+                  "magenta", "yellow", "dark red", "dark green", "blue"]
+        styles = [1, 1, 1, 1, 1,
+                  1, 1, 1, 1, 1]
+        markers = [-1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+                  1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in xrange(1):
+            if len(labels[i]) == 0:
+                self.qtgui_time_sink_x_1.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_time_sink_x_1.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_1.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_1.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_1.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_1.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_1.set_line_alpha(i, alphas[i])
+
+        self._qtgui_time_sink_x_1_win = sip.wrapinstance(self.qtgui_time_sink_x_1.pyqwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_1_win)
+        self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
         	1024, #size
         	samp_rate, #samp_rate
         	"", #name
@@ -85,12 +134,12 @@ class top_block(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
 
         self.qtgui_time_sink_x_0.enable_tags(-1, True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "Z")
+        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
         self.qtgui_time_sink_x_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0.enable_stem_plot(True)
+        self.qtgui_time_sink_x_0.enable_stem_plot(False)
 
         if not True:
           self.qtgui_time_sink_x_0.disable_legend()
@@ -103,14 +152,17 @@ class top_block(gr.top_block, Qt.QWidget):
                   "magenta", "yellow", "dark red", "dark green", "blue"]
         styles = [1, 1, 1, 1, 1,
                   1, 1, 1, 1, 1]
-        markers = [0, -1, -1, -1, -1,
+        markers = [-1, -1, -1, -1, -1,
                    -1, -1, -1, -1, -1]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
 
-        for i in xrange(1):
+        for i in xrange(2):
             if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
+                if(i % 2 == 0):
+                    self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
+                else:
+                    self.qtgui_time_sink_x_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
             else:
                 self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
             self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
@@ -121,13 +173,23 @@ class top_block(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
+        self.interp_fir_filter_xxx_0_0 = filter.interp_fir_filter_fff(2, (1, ))
+        self.interp_fir_filter_xxx_0_0.declare_sample_delay(0)
+        self.interp_fir_filter_xxx_0 = filter.interp_fir_filter_fff(2, (1, ))
+        self.interp_fir_filter_xxx_0.declare_sample_delay(0)
+        self.fir_filter_xxx_0_0 = filter.fir_filter_fff(2, (1, ))
+        self.fir_filter_xxx_0_0.declare_sample_delay(0)
+        self.fir_filter_xxx_0 = filter.fir_filter_fff(2, (1, ))
+        self.fir_filter_xxx_0.declare_sample_delay(1)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_char*1, samp_rate,True)
+        self.blocks_float_to_complex_1 = blocks.float_to_complex(1)
         self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, '/home/nickjmah/Documents/EE470FinalProject/Test.txt', True)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
+        self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, 1)
         self.asc_2_sym_1 = asc_2_sym(
             a_bpsym=2,
             b_eds=1,
-            c_pol=1,
+            c_pol=0,
             d_inv=0,
             e_true_asc=0,
         )
@@ -137,9 +199,17 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.asc_2_sym_1, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.asc_2_sym_1, 0), (self.blocks_delay_0, 0))
+        self.connect((self.asc_2_sym_1, 0), (self.fir_filter_xxx_0_0, 0))
+        self.connect((self.asc_2_sym_1, 0), (self.qtgui_time_sink_x_1, 0))
+        self.connect((self.blocks_delay_0, 0), (self.fir_filter_xxx_0, 0))
         self.connect((self.blocks_file_source_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_float_to_complex_1, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.asc_2_sym_1, 0))
+        self.connect((self.fir_filter_xxx_0, 0), (self.interp_fir_filter_xxx_0, 0))
+        self.connect((self.fir_filter_xxx_0_0, 0), (self.interp_fir_filter_xxx_0_0, 0))
+        self.connect((self.interp_fir_filter_xxx_0, 0), (self.blocks_float_to_complex_1, 0))
+        self.connect((self.interp_fir_filter_xxx_0_0, 0), (self.blocks_float_to_complex_1, 1))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
@@ -151,6 +221,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.qtgui_time_sink_x_1.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
 
