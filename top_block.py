@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Mon May 28 18:14:29 2018
+# Generated: Mon May 28 18:22:52 2018
 ##################################################
 
 if __name__ == '__main__':
@@ -16,7 +16,12 @@ if __name__ == '__main__':
         except:
             print "Warning: failed to XInitThreads()"
 
+import os
+import sys
+sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio')))
+
 from PyQt4 import Qt
+from asc_2_sym import asc_2_sym  # grc-generated hier_block
 from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
@@ -26,7 +31,6 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import pmt
 import sip
-import sys
 from gnuradio import qtgui
 
 
@@ -86,7 +90,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0.enable_stem_plot(False)
+        self.qtgui_time_sink_x_0.enable_stem_plot(True)
 
         if not True:
           self.qtgui_time_sink_x_0.disable_legend()
@@ -117,21 +121,25 @@ class top_block(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.blocks_uchar_to_float_0 = blocks.uchar_to_float()
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_char*1, samp_rate,True)
-        self.blocks_packed_to_unpacked_xx_0 = blocks.packed_to_unpacked_bb(1, gr.GR_LSB_FIRST)
         self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, '/home/nickjmah/Documents/EE470FinalProject/Test.txt', True)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
+        self.asc_2_sym_1 = asc_2_sym(
+            a_bpsym=2,
+            b_eds=1,
+            c_pol=1,
+            d_inv=0,
+            e_true_asc=0,
+        )
 
 
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_file_source_0, 0), (self.blocks_packed_to_unpacked_xx_0, 0))
-        self.connect((self.blocks_packed_to_unpacked_xx_0, 0), (self.blocks_throttle_0, 0))
-        self.connect((self.blocks_throttle_0, 0), (self.blocks_uchar_to_float_0, 0))
-        self.connect((self.blocks_uchar_to_float_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.asc_2_sym_1, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.asc_2_sym_1, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
