@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Mon May 28 20:12:33 2018
+# Generated: Tue May 29 12:28:35 2018
 ##################################################
 
 if __name__ == '__main__':
@@ -25,7 +25,6 @@ from asc_2_sym import asc_2_sym  # grc-generated hier_block
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
-from gnuradio import filter
 from gnuradio import gr
 from gnuradio import qtgui
 from gnuradio.eng_option import eng_option
@@ -224,8 +223,6 @@ class top_block(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(1, 2):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.fir_filter_xxx_0_1 = filter.fir_filter_ccc(1, (rrc_taps))
-        self.fir_filter_xxx_0_1.declare_sample_delay(0)
         self.digital_constellation_modulator_0 = digital.generic_mod(
           constellation=qpsk,
           differential=True,
@@ -237,9 +234,15 @@ class top_block(gr.top_block, Qt.QWidget):
           )
         self.blocks_throttle_0_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_char*1, samp_rate,True)
+        self.blocks_threshold_ff_1 = blocks.threshold_ff(-0.6, 0.6, 0)
+        self.blocks_threshold_ff_0 = blocks.threshold_ff(-0.6, 0.6, 0)
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((2, ))
         self.blocks_float_to_uchar_0 = blocks.float_to_uchar()
+        self.blocks_float_to_complex_2 = blocks.float_to_complex(1)
         self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, 'C:\\Users\\jpzho_000\\Documents\\GitHub\\EE470FinalProject\\Test.txt', True)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
+        self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
+        self.blocks_add_const_vxx_0 = blocks.add_const_vcc((-0.5-0.5j, ))
         self.asc_2_sym_1 = asc_2_sym(
             a_bpsym=2,
             b_eds=1,
@@ -254,17 +257,23 @@ class top_block(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.asc_2_sym_1, 0), (self.blocks_float_to_uchar_0, 0))
+        self.connect((self.blocks_add_const_vxx_0, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self.blocks_complex_to_float_0, 0), (self.blocks_threshold_ff_0, 0))
+        self.connect((self.blocks_complex_to_float_0, 1), (self.blocks_threshold_ff_1, 0))
         self.connect((self.blocks_file_source_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_float_to_complex_2, 0), (self.blocks_add_const_vxx_0, 0))
         self.connect((self.blocks_float_to_uchar_0, 0), (self.digital_constellation_modulator_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_const_sink_x_0, 1))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_freq_sink_x_0, 1))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_time_sink_x_0_0, 1))
+        self.connect((self.blocks_threshold_ff_0, 0), (self.blocks_float_to_complex_2, 0))
+        self.connect((self.blocks_threshold_ff_1, 0), (self.blocks_float_to_complex_2, 1))
         self.connect((self.blocks_throttle_0, 0), (self.asc_2_sym_1, 0))
-        self.connect((self.blocks_throttle_0_0, 0), (self.fir_filter_xxx_0_1, 0))
+        self.connect((self.blocks_throttle_0_0, 0), (self.blocks_complex_to_float_0, 0))
         self.connect((self.blocks_throttle_0_0, 0), (self.qtgui_const_sink_x_0, 0))
         self.connect((self.blocks_throttle_0_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.blocks_throttle_0_0, 0), (self.qtgui_time_sink_x_0_0, 0))
         self.connect((self.digital_constellation_modulator_0, 0), (self.blocks_throttle_0_0, 0))
-        self.connect((self.fir_filter_xxx_0_1, 0), (self.qtgui_const_sink_x_0, 1))
-        self.connect((self.fir_filter_xxx_0_1, 0), (self.qtgui_freq_sink_x_0, 1))
-        self.connect((self.fir_filter_xxx_0_1, 0), (self.qtgui_time_sink_x_0_0, 1))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
@@ -306,7 +315,6 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_rrc_taps(self, rrc_taps):
         self.rrc_taps = rrc_taps
-        self.fir_filter_xxx_0_1.set_taps((self.rrc_taps))
 
     def get_qpsk(self):
         return self.qpsk
