@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Tue May 29 12:28:35 2018
+# Generated: Thu May 31 22:26:05 2018
 ##################################################
 
 if __name__ == '__main__':
@@ -67,11 +67,9 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         self.sps = sps = 4
         self.excess_bw = excess_bw = 0.35
-        self.tag = tag = gr.tag_utils.python_to_tag((0, pmt.intern("Z"), pmt.intern("0x5a"), pmt.intern("Vsrc")))
         self.samp_rate = samp_rate = 32000
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(1, sps, 1, excess_bw, 45)
         self.qpsk = qpsk = digital.constellation_rect(([0.707+0.707j, -0.707+0.707j, -0.707-0.707j, 0.707-0.707j]), ([0, 1, 2, 3]), 4, 2, 2, 1, 1).base()
-        self.arity = arity = 4
 
         ##################################################
         # Blocks
@@ -98,7 +96,7 @@ class top_block(gr.top_block, Qt.QWidget):
         if not True:
           self.qtgui_time_sink_x_0_0.disable_legend()
 
-        labels = ['Re{TX}', 'Im{TX}', 'Re{RX}', 'Im{RX}', '',
+        labels = ['Re{Unfiltered}', 'Im{Unfiltered}', 'Re{Filtered Square}', 'Im{Filtered Square}', '',
                   '', '', '', '', '']
         widths = [1, 1, 1, 1, 1,
                   1, 1, 1, 1, 1]
@@ -155,7 +153,7 @@ class top_block(gr.top_block, Qt.QWidget):
         if "complex" == "float" or "complex" == "msg_float":
           self.qtgui_freq_sink_x_0.set_plot_pos_half(not True)
 
-        labels = ['TX', 'RX', '', '', '',
+        labels = ['Unfiltered', 'Filtered Square', '', '', '',
                   '', '', '', '', '']
         widths = [2, 2, 1, 1, 1,
                   1, 1, 1, 1, 1]
@@ -194,7 +192,7 @@ class top_block(gr.top_block, Qt.QWidget):
         if not True:
           self.qtgui_const_sink_x_0.disable_legend()
 
-        labels = ['TX', 'RX', '', '', '',
+        labels = ['Unfiltered', 'Filtered Square', '', '', '',
                   '', '', '', '', '']
         widths = [1, 1, 1, 1, 1,
                   1, 1, 1, 1, 1]
@@ -239,7 +237,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((2, ))
         self.blocks_float_to_uchar_0 = blocks.float_to_uchar()
         self.blocks_float_to_complex_2 = blocks.float_to_complex(1)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, 'C:\\Users\\jpzho_000\\Documents\\GitHub\\EE470FinalProject\\Test.txt', True)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, 'C:\\Users\\Jason Zhou\\Documents\\GitHub\\EE470FinalProject\\Test.txt', True)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
         self.blocks_add_const_vxx_0 = blocks.add_const_vcc((-0.5-0.5j, ))
@@ -294,12 +292,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.excess_bw = excess_bw
         self.set_rrc_taps(firdes.root_raised_cosine(1, self.sps, 1, self.excess_bw, 45))
 
-    def get_tag(self):
-        return self.tag
-
-    def set_tag(self, tag):
-        self.tag = tag
-
     def get_samp_rate(self):
         return self.samp_rate
 
@@ -321,12 +313,6 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_qpsk(self, qpsk):
         self.qpsk = qpsk
-
-    def get_arity(self):
-        return self.arity
-
-    def set_arity(self, arity):
-        self.arity = arity
 
 
 def main(top_block_cls=top_block, options=None):
